@@ -36,6 +36,7 @@ A full-stack content moderation app built for a technical assessment. Users subm
 | Database | MongoDB Atlas (free tier) |
 | Image storage | Cloudinary (free tier) |
 | AI | Google AI Studio model (`gemini-3.1-flash-lite`) |
+| AI orchestration | LangChain |
 | Auth | JWT  |
 | Deployment | Render backend + Vercel frontend |
 
