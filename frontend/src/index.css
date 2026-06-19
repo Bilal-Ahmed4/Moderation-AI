@@ -1,0 +1,314 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+    body {
+        background-color: #f9f9f8;
+        color: #0f1117;
+        font-family:
+            "Inter",
+            system-ui,
+            -apple-system,
+            sans-serif;
+        font-size: 14px;
+        line-height: 1.6;
+        font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-weight: 500;
+        line-height: 1.3;
+    }
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+    button {
+        font-family: inherit;
+        cursor: pointer;
+    }
+    input,
+    textarea,
+    select {
+        font-family: inherit;
+    }
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+@layer components {
+    /* -- Labels -- */
+    .label {
+        display: block;
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #6b7280;
+        margin-bottom: 6px;
+    }
+
+    /* -- Cards -- */
+    .card {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 0.5px solid #e5e7eb;
+    }
+
+    /* -- Inputs -- */
+    .input {
+        display: block;
+        width: 100%;
+        background: #f9fafb;
+        border: 0.5px solid #e5e7eb;
+        border-radius: 8px;
+        height: 36px;
+        padding: 0 12px;
+        font-size: 14px;
+        font-family: inherit;
+        color: #0f1117;
+        outline: none;
+        transition:
+            border-color 120ms ease,
+            box-shadow 120ms ease;
+        appearance: auto;
+    }
+    .input:focus {
+        border-color: #0f1117;
+        box-shadow: 0 0 0 3px rgba(15, 17, 23, 0.08);
+    }
+    .input:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    textarea.input {
+        height: auto;
+        padding: 8px 12px;
+        resize: vertical;
+    }
+
+    /* -- Buttons -- */
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: #0f1117;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        font-family: inherit;
+        cursor: pointer;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background 120ms ease;
+        line-height: 1.4;
+    }
+    .btn-primary:hover:not(:disabled) {
+        background: #1e2028;
+    }
+    .btn-primary:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: transparent;
+        color: #0f1117;
+        border: 0.5px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 400;
+        font-family: inherit;
+        cursor: pointer;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background 120ms ease;
+        line-height: 1.4;
+    }
+    .btn-secondary:hover:not(:disabled) {
+        background: #f3f4f6;
+    }
+    .btn-secondary:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    /* -- Badges -- pill + 6px dot -- */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 9px;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 400;
+        white-space: nowrap;
+        line-height: 1.4;
+    }
+    .badge::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .badge-green {
+        @apply badge;
+        background: #f0fdf4;
+        color: #166534;
+    }
+    .badge-green::before {
+        background: #16a34a;
+    }
+
+    .badge-amber {
+        @apply badge;
+        background: #fffbeb;
+        color: #92400e;
+    }
+    .badge-amber::before {
+        background: #d97706;
+    }
+
+    .badge-red {
+        @apply badge;
+        background: #fef2f2;
+        color: #991b1b;
+    }
+    .badge-red::before {
+        background: #dc2626;
+    }
+
+    .badge-neutral {
+        @apply badge;
+        background: #f3f4f6;
+        color: #374151;
+    }
+    .badge-neutral::before {
+        background: #9ca3af;
+    }
+
+    /* -- Progress bars -- */
+    .progress-bar {
+        height: 3px;
+        border-radius: 9999px;
+        background: #e5e7eb;
+        overflow: hidden;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        border-radius: 9999px;
+        transition: width 300ms ease;
+    }
+    .progress-green {
+        background: #16a34a;
+    }
+    .progress-amber {
+        background: #d97706;
+    }
+    .progress-red {
+        background: #dc2626;
+    }
+
+    /* -- Sidebar nav items -- */
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 400;
+        color: #6b7280;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+            background 120ms ease,
+            color 120ms ease;
+        white-space: nowrap;
+    }
+    .nav-item:hover {
+        background: #f3f4f6;
+        color: #0f1117;
+    }
+    .nav-item.active {
+        background: #0f1117;
+        color: #ffffff;
+    }
+    .nav-item.active i {
+        color: #ffffff;
+    }
+    .nav-item i {
+        font-size: 16px;
+        flex-shrink: 0;
+        color: #9ca3af;
+        transition: color 120ms ease;
+    }
+    .nav-item:hover i {
+        color: #0f1117;
+    }
+
+    /* -- Table rows -- */
+    .table-row-hover:hover {
+        background: #f3f4f6;
+        transition: background 120ms ease;
+    }
+
+    /* -- Toggle (for Policies) -- */
+    .toggle-track {
+        width: 36px;
+        height: 20px;
+        border-radius: 9999px;
+        background: #e5e7eb;
+        position: relative;
+        cursor: pointer;
+        transition: background 120ms ease;
+        border: none;
+        padding: 0;
+        display: inline-block;
+    }
+    .toggle-track.on {
+        background: #0f1117;
+    }
+    .toggle-thumb {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #ffffff;
+        transition: transform 120ms ease;
+    }
+    .toggle-track.on .toggle-thumb {
+        transform: translateX(16px);
+    }
+}
