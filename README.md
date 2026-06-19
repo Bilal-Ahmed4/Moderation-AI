@@ -2,7 +2,7 @@
 
 A full-stack content moderation app built for a technical assessment. Users submit images, Moderation AI screens them against a configurable policy, and admins manage verdicts, appeals, and thresholds.
 
-**Live demo:** [your-app.onrender.com](https://your-app.onrender.com) *(update after deploy)*
+**Live demo:** [LIVE](https://moderation-ai-mauve.vercel.app/) 
 
 ---
 
