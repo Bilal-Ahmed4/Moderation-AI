@@ -59,7 +59,9 @@ def _doc_to_submission(doc: dict) -> SubmissionResponse:
         user_id=doc["user_id"],
         submitted_at=doc["submitted_at"],
         images=[_stored_image_from_db(item) for item in doc.get("images", [])],
-        image_verdicts=[_image_verdict_from_db(item) for item in doc.get("image_verdicts", [])],
+        image_verdicts=[
+            _image_verdict_from_db(item) for item in doc.get("image_verdicts", [])
+        ],
     )
 
 
@@ -189,3 +191,19 @@ async def get_submission_by_id(
 async def get_active_policy_or_raise(db: AsyncIOMotorDatabase):
     """Load active policy; callers translate None to HTTP 503."""
     return await get_active_policy(db)
+
+
+async def get_submission_by_id_admin(
+    db: AsyncIOMotorDatabase,
+    submission_id: str,
+) -> SubmissionResponse | None:
+    """
+    Fetch any submission by id with no user_id filter.
+    Only call this from admin-gated routes.
+    """
+    if not ObjectId.is_valid(submission_id):
+        return None
+    doc = await db[SUBMISSIONS_COLLECTION].find_one({"_id": ObjectId(submission_id)})
+    if doc is None:
+        return None
+    return _doc_to_submission(doc)

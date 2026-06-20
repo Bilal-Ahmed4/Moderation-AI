@@ -12,7 +12,7 @@ from bson import ObjectId
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from fastapi.responses import FileResponse, RedirectResponse
 
-from app.auth.dependencies import get_current_user, get_image_viewer
+from app.auth.dependencies import get_current_user, get_image_viewer, require_admin
 from app.database import get_database
 from app.models.moderation_models import ModerationCategory, OverallOutcome
 from app.models.submission import (
@@ -21,7 +21,7 @@ from app.models.submission import (
     SubmissionListResponse,
     SubmissionResponse,
 )
-from app.models.user import UserResponse
+from app.models.user import UserResponse, UserRole
 from app.services.cloudinary_storage import (
     delete_cloudinary_images,
     new_image_id,
@@ -33,6 +33,7 @@ from app.services.submission_service import (
     create_submission,
     get_active_policy_or_raise,
     get_submission_by_id,
+    get_submission_by_id_admin,
     list_submissions,
 )
 
@@ -175,14 +176,42 @@ async def get_submission_history(
     return await list_submissions(db, current_user.id, filters)
 
 
+@router.get("/admin/{submission_id}", response_model=SubmissionResponse)
+async def get_submission_admin(
+    submission_id: str,
+    current_user: UserResponse = Depends(require_admin),
+):
+    """
+    Admin-only: fetch any submission regardless of who submitted it.
+
+    The normal /{submission_id} endpoint is owner-only, which means an admin
+    clicking a submission link from the appeal queue would get a 404 even
+    though the submission exists. This endpoint fixes that.
+    """
+    db = get_database()
+    submission = await get_submission_by_id_admin(db, submission_id)
+    if submission is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Submission not found",
+        )
+    return submission
+
+
 @router.get("/{submission_id}", response_model=SubmissionResponse)
 async def get_submission(
     submission_id: str,
     current_user: UserResponse = Depends(get_current_user),
 ):
-    """Get one submission by id (owner only)."""
+    """Get one submission by id. Admins can view any submission; regular users
+    can only view their own."""
     db = get_database()
-    submission = await get_submission_by_id(db, submission_id, current_user.id)
+    # Admins need cross-user access (e.g. reviewing an appeal's linked
+    # submission). Regular users remain owner-only.
+    if current_user.role == UserRole.ADMIN:
+        submission = await get_submission_by_id_admin(db, submission_id)
+    else:
+        submission = await get_submission_by_id(db, submission_id, current_user.id)
     if submission is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
